@@ -12,8 +12,8 @@ jobs:
       matrix:
         service: [product-service, order-service]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Run unit tests
@@ -22,14 +22,14 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: azure/setup-helm@v4
+      - uses: actions/checkout@v7
+      - uses: azure/setup-helm@v5
       - name: Helm lint
         run: |
           helm lint helm/microservice -f helm/values/product-service.yaml
           helm lint helm/microservice -f helm/values/order-service.yaml
       - name: Hadolint
-        uses: hadolint/hadolint-action@v3.1.0
+        uses: hadolint/hadolint-action@v3.5.0
         with:
           dockerfile: services/product-service/Dockerfile
 
@@ -40,11 +40,11 @@ jobs:
       matrix:
         service: [product-service, order-service]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build image
         run: docker build -t ${{ matrix.service }}:${{ github.sha }} services/${{ matrix.service }}
       - name: Trivy scan
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ matrix.service }}:${{ github.sha }}
           severity: CRITICAL
