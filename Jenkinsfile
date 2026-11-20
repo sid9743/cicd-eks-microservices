@@ -20,10 +20,10 @@ pipeline {
         stage('Unit tests') {
             parallel {
                 stage('product-service') {
-                    steps { sh 'scripts/run-tests.sh product-service' }
+                    steps { sh 'bash scripts/run-tests.sh product-service' }
                 }
                 stage('order-service') {
-                    steps { sh 'scripts/run-tests.sh order-service' }
+                    steps { sh 'bash scripts/run-tests.sh order-service' }
                 }
             }
             post {
@@ -89,7 +89,7 @@ pipeline {
             when { branch 'main' }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'github-bot', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
-                    sh 'scripts/bump-image-tag.sh ${IMAGE_TAG}'
+                    sh 'bash scripts/bump-image-tag.sh ${IMAGE_TAG}'
                 }
             }
         }

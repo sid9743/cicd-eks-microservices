@@ -73,8 +73,8 @@ Alerts in `monitoring/alert-rules.yaml` cover upstream errors, p95 latency above
 
 ```bash
 # Tests
-scripts/run-tests.sh product-service
-scripts/run-tests.sh order-service
+bash scripts/run-tests.sh product-service
+bash scripts/run-tests.sh order-service
 
 # Both services with Docker Compose
 docker compose up --build
