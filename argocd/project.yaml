@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: shop
+  namespace: argocd
+spec:
+  description: Microservices for the shop demo
+  sourceRepos:
+    - https://github.com/sid9743/cicd-eks-microservices.git
+  destinations:
+    - namespace: shop
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
