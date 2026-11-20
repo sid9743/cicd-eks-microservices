@@ -1,0 +1,11 @@
+# Run both services locally:  docker compose up --build
+services:
+  product-service:
+    build: ./services/product-service
+    ports: ["8001:8000"]
+  order-service:
+    build: ./services/order-service
+    environment:
+      PRODUCT_SERVICE_URL: http://product-service:8000
+    ports: ["8002:8000"]
+    depends_on: [product-service]
