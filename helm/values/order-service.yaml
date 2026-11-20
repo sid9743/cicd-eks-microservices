@@ -1,0 +1,9 @@
+nameOverride: order-service
+image:
+  repository: 123456789012.dkr.ecr.ap-south-1.amazonaws.com/order-service
+  tag: "latest"
+env:
+  PRODUCT_SERVICE_URL: http://product-service
+ingress:
+  enabled: true
+  host: orders.example.com
