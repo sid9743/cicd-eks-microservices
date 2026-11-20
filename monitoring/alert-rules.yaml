@@ -1,0 +1,31 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: shop-alerts
+  namespace: shop
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: shop.rules
+      rules:
+        - alert: OrderServiceUpstreamErrors
+          expr: sum(rate(orders_total{status="upstream_error"}[5m])) > 0.1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: order-service cannot reach product-service
+        - alert: ProductServiceSlow
+          expr: histogram_quantile(0.95, sum(rate(product_service_latency_seconds_bucket[5m])) by (le)) > 0.5
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: p95 latency to product-service is above 500ms
+        - alert: PodCrashLooping
+          expr: increase(kube_pod_container_status_restarts_total{namespace="shop"}[15m]) > 3
+          labels:
+            severity: critical
+          annotations:
+            summary: "{{ $labels.pod }} is restarting repeatedly"

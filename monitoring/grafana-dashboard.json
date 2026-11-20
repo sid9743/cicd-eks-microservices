@@ -1,0 +1,33 @@
+{
+  "title": "Shop Microservices",
+  "uid": "shop-overview",
+  "schemaVersion": 39,
+  "refresh": "30s",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Orders per minute by status",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [{ "expr": "sum by (status) (rate(orders_total[1m])) * 60", "legendFormat": "{{status}}" }]
+    },
+    {
+      "type": "timeseries",
+      "title": "p95 latency to product-service (s)",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [{ "expr": "histogram_quantile(0.95, sum(rate(product_service_latency_seconds_bucket[5m])) by (le))" }]
+    },
+    {
+      "type": "timeseries",
+      "title": "Pod CPU usage (cores)",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "targets": [{ "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"shop\", container!=\"\"}[5m]))", "legendFormat": "{{pod}}" }]
+    },
+    {
+      "type": "stat",
+      "title": "Running pods",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "targets": [{ "expr": "count(kube_pod_status_phase{namespace=\"shop\", phase=\"Running\"})" }]
+    }
+  ]
+}
